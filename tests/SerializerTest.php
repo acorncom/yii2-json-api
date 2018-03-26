@@ -24,7 +24,7 @@ class SerializerTest extends TestCase
         ResourceModel::$id = [];
         $model = new ResourceModel();
         $serializer = new Serializer();
-        $this->expectException(InvalidValueException::class);
+        $this->setExpectedException('\yii\base\InvalidValueException');
         $serializer->serialize($model);
     }
     

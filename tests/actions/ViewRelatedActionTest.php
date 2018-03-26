@@ -41,7 +41,7 @@ class ViewRelatedActionTest extends TestCase
         $action->findModel = function ($id, $action) {
             return new ResourceModel();
         };
-        $this->expectException(NotFoundHttpException::class);
+        $this->setExpectedException('\yii\web\NotFoundHttpException');
         $action->run(1, 'invalid');
     }
 }
