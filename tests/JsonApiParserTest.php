@@ -22,7 +22,7 @@ class JsonApiParserTest extends TestCase
     public function testMissingData()
     {
         $parser = new JsonApiParser();
-        $this->expectException(BadRequestHttpException::class);
+        $this->setExpectedException('\yii\web\BadRequestHttpException');
         $body = Json::encode(['incorrect-member']);
         $parser->parse($body, '');
     }

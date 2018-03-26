@@ -18,19 +18,14 @@ class JsonApiResponseFormatter extends Component implements ResponseFormatterInt
      * Mapping between the error handler component and JSON API error object
      * @see ErrorHandler::convertExceptionToArray()
      */
-    const ERROR_EXCEPTION_MAPPING = [
-        'title' => 'name',
-        'detail' => 'message',
-        'code' => 'code',
-        'status' => 'status'
-    ];
+    private $ERROR_EXCEPTION_MAPPING;
+
     /**
      * An error object MAY have the following members
      * @link http://jsonapi.org/format/#error-objects
      */
-    const ERROR_ALLOWED_MEMBERS = [
-        'id', 'links', 'status', 'code', 'title', 'detail', 'source', 'meta'
-    ];
+    private $ERROR_ALLOWED_MEMBERS;
+
     /**
      * @var integer the encoding options passed to [[Json::encode()]]. For more details please refer to
      * <http://www.php.net/manual/en/function.json-encode.php>.
@@ -43,6 +38,19 @@ class JsonApiResponseFormatter extends Component implements ResponseFormatterInt
      * Defaults to `false`.
      */
     public $prettyPrint = false;
+
+    public function init()
+    {
+        $this->ERROR_ALLOWED_MEMBERS = [
+            'id', 'links', 'status', 'code', 'title', 'detail', 'source', 'meta'
+        ];
+        $this->ERROR_EXCEPTION_MAPPING = [
+            'title' => 'name',
+            'detail' => 'message',
+            'code' => 'code',
+            'status' => 'status'
+        ];
+    }
 
     /**
      * Formats response data in JSON format.
@@ -64,8 +72,8 @@ class JsonApiResponseFormatter extends Component implements ResponseFormatterInt
                 }
                 $formattedErrors = [];
                 foreach ($response->data as $error) {
-                    $formattedError = array_intersect_key($error, array_flip(static::ERROR_ALLOWED_MEMBERS));
-                    foreach (static::ERROR_EXCEPTION_MAPPING as $member => $key) {
+                    $formattedError = array_intersect_key($error, array_flip($this->ERROR_ALLOWED_MEMBERS));
+                    foreach ($this->ERROR_EXCEPTION_MAPPING as $member => $key) {
                         if (isset($error[$key])) {
                             $formattedError[$member] = (string) $error[$key];
                         }

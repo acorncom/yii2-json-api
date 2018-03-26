@@ -31,7 +31,7 @@ class DeleteRelationshipActionTest extends TestCase
         $model->extraField1 = [new ResourceModel()];
         \Yii::$app->request->setBodyParams(['ResourceModel' => ['type' => 'resource-models', 'id' => 123]]);
         $this->assertInstanceOf(ActiveDataProvider::className(), $dataProvider = $action->run(1, 'extraField1'));
-        $this->expectException(ForbiddenHttpException::class);
+        $this->setExpectedException('\yii\web\ForbiddenHttpException');
         $this->assertInstanceOf(ResourceModel::className(), $action->run(1, 'extraField2'));
     }
 }
