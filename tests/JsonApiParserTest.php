@@ -76,6 +76,91 @@ class JsonApiParserTest extends TestCase
         ], $parser->parse($body, ''));
     }
 
+    public function testSingleResourceWithCompoundDocument()
+    {
+        $parser = new JsonApiParser();
+        $body = Json::encode([
+            'data' => [
+                'type' => 'resource-models',
+                'attributes' => [
+                    'field1' => 'test',
+                    'field2' => 2,
+                    'first-name' => 'Bob'
+                ],
+                'relationships' => [
+                    'author' => [
+                        'data' => [
+                            'id' => '321',
+                            'type' => 'authors'
+                        ]
+                    ],
+                    'client' => [
+                        'data' => [
+                            ['id' => '321', 'type' => 'resource-models'],
+                            ['id' => '123', 'type' => 'resource-models']
+                        ]
+                    ]
+                ]
+            ],
+            'included' => [
+                'author' => [
+                    'id' => '321',
+                    'type' => 'authors',
+                    'attributes' => [
+                        'email' => 'joe@smith.com',
+                        'first-name' => 'Joe',
+                    ],
+                    'relationships' => [
+                        'client' => [
+                            'data' => [
+                                'id' => '321',
+                                'type' => 'resource-models',
+                            ],
+                        ],
+                    ],
+                ]
+            ]
+        ]);
+        $this->assertEquals([
+            'ResourceModel' => [
+                'field1' => 'test',
+                'field2' => 2,
+                'first_name' => 'Bob',
+            ],
+            'relationships' => [
+                'author' => [
+                    'Author' => [
+                        ['id' => '321']
+                    ]
+                ],
+                'client' => [
+                    'ResourceModel' => [
+                        ['id' => '321'],
+                        ['id' => '123']
+                    ]
+                ]
+            ],
+            'included' => [
+                'Author' => [
+                    [
+                        'attributes' => [
+                            'id' => '321',
+                            'email' => 'joe@smith.com',
+                            'first_name' => 'Joe',
+                        ],
+                        'relationships' => [
+                            'client' => [
+                                'ResourceModel' => [
+                                    ['id' => '321'],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], $parser->parse($body, ''));
+    }
+
     public function testMultiple()
     {
         $parser = new JsonApiParser();
