@@ -49,13 +49,16 @@ class JsonApiParser extends JsonParser
 
             $relObjects = ArrayHelper::getValue($data, 'relationships', []);
             $result['relationships'] = $this->parseRelationships($relObjects);
-        } else {
-            foreach ($data as $object) {
-                $resource = $this->parseResource($object);
-                foreach (array_keys($resource) as $key) {
-                    $result[$key][] = $resource[$key];
-                }
+
+            $includedObjects = ArrayHelper::getValue($array, 'included', []);
+            $includedResources = $this->parseIncluded($includedObjects);
+
+            // we should NOT populate an included key unless we have valid resources
+            if (count($includedResources) > 0) {
+                $result['included'] = $includedResources;
             }
+        } else {
+            $result = $this->parseResources($data);
         }
 
         return isset($result) ? $result : $array;
@@ -68,6 +71,20 @@ class JsonApiParser extends JsonParser
     protected function typeToFormName($type)
     {
         return call_user_func($this->formNameCallback, $type);
+    }
+
+    /**
+     * @param array $included
+     *
+     * @return array
+     */
+    protected function parseIncluded(array $included)
+    {
+        if (count($included) === 0) {
+            return [];
+        }
+
+        return $this->parseResources($included);
     }
 
     /**
@@ -102,6 +119,26 @@ class JsonApiParser extends JsonParser
         }
 
         return [$formName => $attributes];
+    }
+
+    /**
+     * @param $resources
+     *
+     * @return array
+     * @throws BadRequestHttpException
+     */
+    protected function parseResources($resources)
+    {
+        $result = [];
+
+        foreach ($resources as $object) {
+            $resource = $this->parseResource($object);
+            foreach (array_keys($resource) as $key) {
+                $result[$key][] = $resource[$key];
+            }
+        }
+
+        return $result;
     }
 
     /**
