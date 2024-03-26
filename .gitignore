@@ -32,3 +32,5 @@ phpunit.phar
 /tests/runtime
 /tests/docker
 /tests/dockerids
+/.phpunit.cache
+/.phpunit.result.cache

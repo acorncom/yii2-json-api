@@ -29,7 +29,7 @@ class ResourceModelIdentifier implements ResourceIdentifierInterface {
 
 class SerializerTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         ResourceModel::$fields = ['field1', 'field2'];
@@ -466,7 +466,7 @@ class SerializerTest extends TestCase
         ])));
     }
 
-    public function dataProviderSerializeDataProvider()
+    public static function dataProviderSerializeDataProvider()
     {
         $bob = new ResourceModel();
         $bob->username = 'Bob';
