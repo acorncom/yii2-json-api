@@ -7,15 +7,15 @@ namespace tuyakhov\jsonapi\tests;
 use \yii\helpers\ArrayHelper;
 use yii\web\Response;
 
-class TestCase extends \PHPUnit_Framework_TestCase
+class TestCase extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->mockApplication();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->destroyApplication();
     }

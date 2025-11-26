@@ -29,7 +29,7 @@ class ResourceModelIdentifier implements ResourceIdentifierInterface {
 
 class SerializerTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         ResourceModel::$fields = ['field1', 'field2'];
