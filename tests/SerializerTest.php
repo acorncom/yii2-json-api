@@ -450,7 +450,9 @@ class SerializerTest extends TestCase
                 $includedModel
             ],
             'links' => [
-                'self' => ['href' => '/index.php?r=&include=extra-field1%2Cextra-field2.extra-field1&page=1']
+                'self' => ['href' => '/index.php?r=&include=extra-field1%2Cextra-field2.extra-field1&page=1'],
+                'first' => ['href' => '/index.php?r=&include=extra-field1%2Cextra-field2.extra-field1&page=1'],
+                'last' => ['href' => '/index.php?r=&include=extra-field1%2Cextra-field2.extra-field1&page=1']
             ],
             'meta' => [
                 'total-count' => 1,
@@ -516,7 +518,9 @@ class SerializerTest extends TestCase
                         'per-page' => 20
                     ],
                     'links' => [
-                        'self' => ['href' => '/index.php?r=&page=1']
+                        'self' => ['href' => '/index.php?r=&page=1'],
+                        'first' => ['href' => '/index.php?r=&page=1'],
+                        'last' => ['href' => '/index.php?r=&page=1']
                     ]
                 ]
             ],
@@ -545,7 +549,8 @@ class SerializerTest extends TestCase
                     'links' => [
                         'self' => ['href' => '/index.php?r=&page=1&per-page=1'],
                         'next' => ['href' => '/index.php?r=&page=2&per-page=1'],
-                        'last' => ['href' => '/index.php?r=&page=2&per-page=1']
+                        'last' => ['href' => '/index.php?r=&page=2&per-page=1'],
+                        'first' => ['href' => '/index.php?r=&page=1&per-page=1']
                     ]
                 ]
             ],
@@ -574,7 +579,8 @@ class SerializerTest extends TestCase
                     'links' => [
                         'self' => ['href' => '/index.php?r=&page=2&per-page=1'],
                         'first' => ['href' => '/index.php?r=&page=1&per-page=1'],
-                        'prev' => ['href' => '/index.php?r=&page=1&per-page=1']
+                        'prev' => ['href' => '/index.php?r=&page=1&per-page=1'],
+                        'last' => ['href' => '/index.php?r=&page=2&per-page=1']
                     ]
                 ]
             ],
