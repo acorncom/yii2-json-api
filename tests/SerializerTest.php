@@ -272,6 +272,52 @@ class SerializerTest extends TestCase
         $this->assertSame($expected, $serializer->serialize($model));
     }
 
+    public function testSerializeModelDataAndIncludeAnEmptyRelationshipsDataPayload()
+    {
+        $serializer = new Serializer();
+        $serializer->allowEmptyRelationshipData = ['extra-field1'];
+
+        ResourceModel::$id = 123;
+        $model = new ResourceModel();
+
+        ResourceModel::$fields = ['first_name'];
+        ResourceModel::$extraFields = [
+            'extraField1' => function() {
+                return [
+                    'resource' => new ResourceModel(),
+                    'data' => [],
+                ];
+            }
+        ];
+        $relationship = [
+            'data' => [],
+            'links' => [
+                'self' => ['href' => 'http://example.com/resource/123/relationships/extra-field1'],
+                'related' => ['href' => 'http://example.com/resource/123/extra-field1'],
+            ]
+        ];
+        $resource = [
+            'id' => '123',
+            'type' => 'resource-models',
+            'attributes' => [
+                'first-name' => 'Bob',
+            ],
+            'relationships' => [
+                'extra-field1' => [
+                    'links' => $relationship['links']
+                ]
+            ],
+            'links' => [
+                'self' => ['href' => 'http://example.com/resource/123']
+            ]
+        ];
+        $expected = [
+            'data' => $resource
+        ];
+        $expected['data']['relationships']['extra-field1'] = $relationship;
+        $this->assertSame($expected, $serializer->serialize($model));
+    }
+
     public function testExpand()
     {
         $serializer = new Serializer();

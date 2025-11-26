@@ -67,6 +67,17 @@ class Serializer extends Component
      */
     public $formatMemberName = ['tuyakhov\jsonapi\Inflector', 'member2var'];
 
+    /**
+     * Allows altering relationship payload behavior
+     * 
+     * Default behavior of this serializer is to omit the `data` key in a relationship object
+     * if the relationship is empty (null or an empty array). Adding 
+     * relationship names to this array will include an empty `data` key for those relationships.
+     *
+     * @var array
+     */
+    public $allowEmptyRelationshipData = [];
+
 
     /**
      * @inheritdoc
@@ -141,7 +152,7 @@ class Serializer extends Component
                 }
                 $memberName = $this->prepareMemberNames([$name]);
                 $memberName = reset($memberName);
-                if (!empty($relationship)) {
+                if (!empty($relationship) || in_array($memberName, $this->allowEmptyRelationshipData)) {
                     $data['relationships'][$memberName]['data'] = $relationship;
                 }
                 if ($model instanceof LinksInterface) {
